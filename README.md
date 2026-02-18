@@ -77,6 +77,7 @@ model = LoGo_BERT.from_pretrained(
 )
 ```
 The tokenizer is loaded from the base protein language model (ESM2).
+
 ---
 ## Training
 Example multi-GPU training:
@@ -105,6 +106,7 @@ P12345,Q88888
 ```
 **FASTA file**
 Protein identifiers must match IDs used in the pair file.
+
 ---
 ## Inference
 **Compute embeddings and infer interactions:**
@@ -128,10 +130,13 @@ scripts/infer_pairs_ddp.py \
   --output_path pair_scores.csv
 ```
 Embeddings are computed once and reused during interaction scoring to enable efficient large-scale inference.
+
 ---
 ## Acknowledgements
+
 Parts of the batching utilities were adapted from PLM-interact (MIT License, Dan Liu, 2024).
 See the NOTICE file for details.
+
 ---
 ## License
 
