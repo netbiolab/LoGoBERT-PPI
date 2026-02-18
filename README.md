@@ -30,7 +30,7 @@ By separating embedding and interaction scoring, LoGoBERT-PPI enables scalable i
 Clone the repository:
 
 ```bash
-git clone https://github.com/<username>/LoGoBERT-PPI.git
+git clone https://github.com/netbiolab/LoGoBERT-PPI.git
 cd LoGoBERT-PPI
 ```
 Conda Environment (recommended)
