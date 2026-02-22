@@ -219,7 +219,7 @@ def train(
             labels = labels.to(device)
 
             with autocast("cuda"):
-                loss_main, _, extras = model(input_a, input_b, labels, return_extras=True)
+                loss_main, _, extras = model(input_a, input_b, labels)
             loss = loss_main / grad_accum_steps
 
             extras["concat"].retain_grad()
