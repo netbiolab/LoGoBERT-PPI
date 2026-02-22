@@ -95,7 +95,9 @@ script/train_logobert.py \
   --save_path checkpoints/run1
 ```
 ## Training data
-**https://d-script.readthedocs.io/en/stable/data.html**
+
+https://d-script.readthedocs.io/en/stable/data.html
+
 ---
 
 ## Input Format
@@ -145,4 +147,4 @@ See the NOTICE file for details.
 This project is released under the Apache License 2.0.
 
 Some components were adapted from PLM-interact (MIT License, Dan Liu, 2024).
-See the NOTICE file for details.
+
