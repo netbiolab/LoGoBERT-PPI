@@ -73,7 +73,7 @@ Models can be loaded directly using:
 from logobert.model.LoGo_BERT import LoGo_BERT
 
 model = LoGo_BERT.from_pretrained(
-    "hbeen/LoGoBERT-PPI-Eukaryote"
+    "netbiolab/LoGoBERT-PPI-Eukaryote"
 )
 ```
 The tokenizer is loaded from the base protein language model (ESM2).
@@ -83,10 +83,10 @@ The tokenizer is loaded from the base protein language model (ESM2).
 Example multi-GPU training:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,1,2 torchrun --nproc_per_node=3 \
-scripts/train_ddp.py \
-  --train_path data/train.tsv \
-  --val_path data/val.tsv \
+CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
+scripts/train_logobert.py \
+  --train_path test_train_data/train/test_train.tsv \
+  --val_path test_train_data/train/test_val.tsv \
   --model_name facebook/esm2_t33_650M_UR50D \
   --embedding_dim 512 \
   --batch_size 4 \
@@ -94,6 +94,8 @@ scripts/train_ddp.py \
   --epochs 20 \
   --save_path checkpoints/run1
 ```
+## Training data
+**https://d-script.readthedocs.io/en/stable/data.html**
 ---
 
 ## Input Format
@@ -111,22 +113,22 @@ Protein identifiers must match IDs used in the pair file.
 ## Inference
 **Compute embeddings and infer interactions:**
 ```bash
-CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 \
-scripts/infer_pairs_ddp.py \
-  --pair_csv pairs.csv \
-  --fasta_path proteins.fasta \
-  --hf_repo hbeen/LoGoBERT-PPI-Eukaryote \
+CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
+scripts/inference_HF.py \
+  --pair_csv xspecies_ID_test/yeast_test.csv \
+  --fasta_path xspecies_ID_test/xspecies_fasta/yeast_dedup.fasta \
+  --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
   --model_name facebook/esm2_t33_650M_UR50D \
   --embedding_save_path embeddings.pt \
   --output_path pair_scores.csv
 ```
 **Use cached embeddings**
 ```bash
-CUDA_VISIBLE_DEVICES=0,1 torchrun --nproc_per_node=2 \
-scripts/infer_pairs_ddp.py \
-  --pair_csv pairs.csv \
+CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
+scripts/inference_HF.py \
+  --pair_csv xspecies_ID_test/yeast_test.csv \
   --embeddings_path embeddings.pt \
-  --hf_repo hbeen/LoGoBERT-PPI-Eukaryote \
+  --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
   --output_path pair_scores.csv
 ```
 Embeddings are computed once and reused during interaction scoring to enable efficient large-scale inference.
