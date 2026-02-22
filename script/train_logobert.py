@@ -219,62 +219,23 @@ def train(
             labels = labels.to(device)
 
             with autocast("cuda"):
-                loss_main, _, extras = model(input_a, input_b, labels)
-            loss = loss_main / grad_accum_steps
-
-            extras["concat"].retain_grad()
+                loss_main, logits  = model(input_a, input_b, labels)
+                loss = loss_main / grad_accum_steps
             scaler.scale(loss).backward()
-
             reach_boundary = ((step + 1) % grad_accum_steps == 0)
             if reach_boundary:
                 scaler.unscale_(optimizer)
-
-                if (local_rank == 0) and ((global_step + 1) % measure_every == 0):
-                    D = extras.get("D", None)
-                    if (extras["concat"].grad is not None) and (D is not None):
-                        g = extras["concat"].grad.detach()
-                        g1 = g[:, : 3 * D]
-                        g2 = g[:, 3 * D: 3 * D + 1]
-                        g1_mag = g1.abs().mean().item()
-                        g2_mag = g2.abs().mean().item()
-                        ratio = g2_mag / (g1_mag + 1e-12)
-                        wandb.log({
-                            "grad/concat_g1_mean_abs": g1_mag,
-                            "grad/concat_g2_mean_abs": g2_mag,
-                            "grad/g2_over_g1": ratio,
-                            "train/global_step": global_step + 1,
-                        })
-                    else:
-                        wandb.log({
-                            "dbg/concat_has_grad": int(extras["concat"].grad is not None),
-                            "train/global_step": global_step + 1,
-                        })
-
-                    mod = model.module if hasattr(model, "module") else model
-
-                    def gnorm(p):
-                        return (p.grad.detach().float().norm().item()
-                                if (p is not None and p.grad is not None) else 0.0)
-
-                    mw = gnorm(getattr(mod, "maxsim_weight", None))
-                    sw = gnorm(getattr(mod, "sbert_weight", None))
-                    wandb.log({
-                        "grad/maxsim_weight_norm": mw,
-                        "grad/sbert_weight_norm": sw,
-                        "grad/weight_grad_ratio_mw_over_sw": (mw / (sw + 1e-12)) if sw != 0 else 0.0,
-                    })
-
-                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=max_grad_norm)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
+        
                 scaler.step(optimizer)
                 scaler.update()
-                scheduler.step()
+                scheduler.step()    
                 optimizer.zero_grad(set_to_none=True)
                 global_step += 1
-
+        
             if local_rank == 0 and (step % 10 == 0):
                 pbar.set_description(f"Epoch {epoch} Step {step} | Loss: {loss.item():.4f}")
-                wandb.log({"train/loss": loss.item(), "lr": optimizer.param_groups[0]["lr"]})
-
+                wandb.log({"train/loss": loss.item(), "lr": optimizer.param_groups[0]["lr"], "train/global_step": global_step})
         result = evaluate(model, val_loader, device, has_labels=True)
 
         if result is not None and local_rank == 0:
