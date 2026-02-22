@@ -84,7 +84,7 @@ Example multi-GPU training:
 
 ```bash
 CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
-scripts/train_logobert.py \
+script/train_logobert.py \
   --train_path test_train_data/train/test_train.tsv \
   --val_path test_train_data/train/test_val.tsv \
   --model_name facebook/esm2_t33_650M_UR50D \
@@ -114,7 +114,7 @@ Protein identifiers must match IDs used in the pair file.
 **Compute embeddings and infer interactions:**
 ```bash
 CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
-scripts/inference_HF.py \
+script/inference_HF.py \
   --pair_csv xspecies_ID_test/yeast_test.csv \
   --fasta_path xspecies_ID_test/xspecies_fasta/yeast_dedup.fasta \
   --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
@@ -125,7 +125,7 @@ scripts/inference_HF.py \
 **Use cached embeddings**
 ```bash
 CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
-scripts/inference_HF.py \
+script/inference_HF.py \
   --pair_csv xspecies_ID_test/yeast_test.csv \
   --embeddings_path embeddings.pt \
   --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
