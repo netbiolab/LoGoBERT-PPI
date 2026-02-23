@@ -83,7 +83,7 @@ The tokenizer is loaded from the base protein language model (ESM2).
 Example multi-GPU training:
 
 ```bash
-CUDA_VISIBLE_DEVICES=1,2 torchrun --nproc_per_node=2 \
+CUDA_VISIBLE_DEVICES=0,1,2 torchrun --nproc_per_node=3 \
 script/train_logobert.py \
   --train_path test_train_data/train/test_train.tsv \
   --val_path test_train_data/train/test_val.tsv \
