@@ -89,6 +89,7 @@ script/train_logobert.py \
   --val_path test_train_data/train/test_val.tsv \
   --model_name facebook/esm2_t33_650M_UR50D \
   --embedding_dim 512 \
+  --max_length 512 \
   --batch_size 4 \
   --grad_accum_steps 8 \
   --epochs 20 \
@@ -121,6 +122,7 @@ script/inference_HF.py \
   --fasta_path xspecies_ID_test/xspecies_fasta/yeast_dedup.fasta \
   --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
   --model_name facebook/esm2_t33_650M_UR50D \
+  --max_length 800 \
   --embedding_save_path embeddings.pt \
   --output_path pair_scores.csv
 ```
@@ -131,6 +133,7 @@ script/inference_HF.py \
   --pair_csv xspecies_ID_test/yeast_test.csv \
   --embeddings_path embeddings.pt \
   --hf_repo netbiolab/LoGoBERT-PPI-Eukaryote \
+  --max_length 800 \
   --output_path pair_scores.csv
 ```
 Embeddings are computed once and reused during interaction scoring to enable efficient large-scale inference.
