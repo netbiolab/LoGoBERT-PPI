@@ -93,7 +93,10 @@ script/train_logobert.py \
   --batch_size 4 \
   --grad_accum_steps 8 \
   --epochs 20 \
-  --save_path checkpoints/run1
+  --save_path checkpoints/run1 \
+  --seed 141 \
+  --use_maxsim \
+  --use_ln_g1 
 ```
 ## Training data
 
