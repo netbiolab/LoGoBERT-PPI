@@ -190,13 +190,13 @@ def infer_pair_scores_batch(model, df, protein_embeddings, device, batch_size=16
         mask_a_pad = pad_sequence(mask_a, batch_first=True).to(device, non_blocking=True)
         mask_b_pad = pad_sequence(mask_b, batch_first=True).to(device, non_blocking=True)
  
-        logits = model.predict_from_embeds(
+        probs = model.predict_from_embeds(
             emb_a_pad, mask_a_pad, emb_b_pad, mask_b_pad
             )
-        probs = torch.sigmoid(logits)
+
         scores_out.extend(probs.detach().cpu().tolist())
     
-        del emb_a_pad, emb_b_pad, mask_a_pad, mask_b_pad, logits, probs
+        del emb_a_pad, emb_b_pad, mask_a_pad, mask_b_pad, probs
         
     df['score'] = scores_out
     return df
