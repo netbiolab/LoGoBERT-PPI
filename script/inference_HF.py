@@ -416,11 +416,11 @@ if __name__ == '__main__':
     parser.add_argument("--hf_repo", type=str, default="hbeen/LoGoBERT-PPI-Eukaryote", help="HF repo id for weights/config")
     parser.add_argument("--model_name", type=str, default="facebook/esm2_t6_8M_UR50D")
     parser.add_argument("--embedding_dim", type=int, default=512)
-    parser.add_argument("--batch_size", type=int, default=64)
+    parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--max_length", type=int, default=512)
     parser.add_argument("--embedding_save_path", type=str, default="protein_embeddings.pt")
     parser.add_argument("--output_path", type=str, default="pair_scores.csv")
-    parser.add_argument("--inf_batch_size", type=int, default=16, help="Batch size for inference")
+    parser.add_argument("--inf_batch_size", type=int, default=128, help="Batch size for inference")
     parser.add_argument("--fasta_path", type=str, required=False,  
                         help="FASTA with protein IDs used in pair_csv (q_id,t_id)")
     parser.add_argument("--embeddings_path", type=str, default=None,
